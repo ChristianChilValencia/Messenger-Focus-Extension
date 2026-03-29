@@ -85,10 +85,7 @@ Both Facebook and Instagram have navigation elements that tempt you to explore f
 3. Optionally toggle **"Remove Navigation"** to hide nav buttons and sidebars from the pages
 4. Visit Facebook or Instagram—you'll be taken directly to Messenger or see a messages-only interface!
 
-**Pro Tip:** Enable both toggles for the ultimate distraction-free experience
-
-![Extension Popup](./images/popup-screenshot.png)
-*Screenshot of the extension popup showing toggle options*
+**Pro Tip:** Enable all toggles for the ultimate distraction-free experience
 
 ## 🛠️ Development
 
@@ -176,3 +173,13 @@ To use the image placeholders above, create an `images/` folder in your project 
 - `facebook-before.png` - Facebook before using the extension
 - `facebook-after.png` - Facebook after using the extension
 - `popup-screenshot.png` - Screenshot of the extension popup
+
+---
+
+## 👨‍💻 Built By
+
+**Christian Valencia**
+
+Part of **ValAid** — *A ValAid solution might be your valid solution*
+
+---
