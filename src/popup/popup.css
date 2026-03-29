@@ -6,6 +6,7 @@ body {
   background: #fff;
   box-sizing: border-box;
 }
+
 .toggle-row {
   display: flex;
   align-items: center;
@@ -13,14 +14,26 @@ body {
   padding: 14px 0;
   border-bottom: 1px solid #eee;
   gap: 14px;
+  width: 100%;
+}
+
+.toggle-icon {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  margin-right: 10px;
+  display: block;
 }
 .toggle-label {
   color: #222;
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 600;
-  flex: 1;
+  flex: 1 1 auto;
   margin-right: 0;
   white-space: nowrap;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .switch {
   position: relative;
@@ -28,6 +41,8 @@ body {
   width: 44px;
   height: 24px;
   flex: 0 0 auto;
+  margin-left: 10px;
+  margin-right: 0;
 }
 .switch input {
   opacity: 0;
