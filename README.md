@@ -15,29 +15,46 @@ That's where this extension comes in. It lets you transform Facebook and Instagr
 
 ## ✨ Features
 
-- **Messaging-Only Mode**: Strip Facebook and Instagram down to their essentials—just your conversations
-- **Smart Redirects**: Option to redirect directly to messenger when needed
-- **Distraction Removal**: Toggle to hide feeds, notifications, and other attention-grabbing elements
-- **Easy Toggle**: Simple popup control to enable/disable the extension on the fly
-- **Works Offline**: Settings are stored locally in your browser
+- **🔄 Smart Redirect to Messenger** - Automatically reroutes you directly to Messenger when you visit Facebook or Instagram, skipping all the distractions
+- **🗑️ Remove Navigation Buttons** - Strips away the sidebar and top navigation to eliminate temptation to browse feeds
+- **💬 Messaging-Only Experience** - See only your conversations and messages, nothing else
+- **⚙️ Easy Toggle** - Simple on/off control in the popup to enable/disable the extension
+- **🔒 Privacy-Focused** - All settings stored locally in your browser
 
 ### Visual Comparison
 
+**Facebook - Before & After:**
+
 | Before | After |
 |--------|-------|
-|<img width="1895" height="1017" alt="Screenshot 2026-03-29 202744" src="https://github.com/user-attachments/assets/ce82de22-6651-4a20-94c9-6a0b5b181cf3" /> |<img width="1894" height="1016" alt="Screenshot 2026-03-29 202811" src="https://github.com/user-attachments/assets/0fe11c94-4c5e-48e4-95b5-bf5733ce0d08" /> |(<img width="1896" height="1011" alt="Screenshot 2026-03-29 202644" src="https://github.com/user-attachments/assets/1b108fea-aded-4011-9a7a-4ef567a9cba2" /> |<img width="1895" height="1011" alt="Screenshot 2026-03-29 202636" src="https://github.com/user-attachments/assets/f1c289f0-c292-4c95-942c-9809cef320b5" /> |
+| <img width="600" alt="Facebook Before" src="https://github.com/user-attachments/assets/ce82de22-6651-4a20-94c9-6a0b5b181cf3" /> | <img width="600" alt="Facebook After" src="https://github.com/user-attachments/assets/0fe11c94-4c5e-48e4-95b5-bf5733ce0d08" /> |
+
+**Instagram - Before & After:**
+
+| Before | After |
+|--------|-------|
+| <img width="600" alt="Instagram Before" src="https://github.com/user-attachments/assets/1b108fea-aded-4011-9a7a-4ef567a9cba2" /> | <img width="600" alt="Instagram After" src="https://github.com/user-attachments/assets/f1c289f0-c292-4c95-942c-9809cef320b5" /> |
 
 ## 🎯 What It Does
 
-### For Facebook
-- Removes the main feed and recommended content
-- Hides the right sidebar distractions
-- Focuses on the messaging interface
+### Smart Redirect
+- **Auto-redirect to Messenger** - When you visit facebook.com or instagram.com, the extension can automatically send you straight to messenger
+- Bypass the main site entirely and go straight to your conversations
 
-### For Instagram  
-- Strips the explore page and recommendations
-- Cleans up story sections and notifications
-- Keeps your DMs front and center
+### Navigation Removal
+Both Facebook and Instagram have navigation elements that tempt you to explore feeds and other features. This extension removes them completely:
+
+#### For Facebook
+- **Removes the left sidebar** (where Feeds, Videos, Marketplace, etc. live)
+- **Removes the top navigation bar buttons** that link to news feeds and other distractions
+- **Hides the right sidebar** (friend suggestions, ads, trending topics)
+- **Focuses exclusively on the Messages interface**
+
+#### For Instagram  
+- **Removes the sidebar navigation** (Home, Explore, Reels, etc.)
+- **Hides all navigation buttons** that could lead you to the feed
+- **Eliminates the explore button and stories**
+- **Keeps only the Direct Messages section visible**
 
 ## 📦 Installation
 
@@ -64,10 +81,11 @@ That's where this extension comes in. It lets you transform Facebook and Instagr
 ## 🚀 Usage
 
 1. Click the extension icon in your Chrome toolbar
-2. Toggle the features on/off based on your preferences:
-   - **Redirect to Messenger** - Takes you straight to messages
-   - **Remove Distractions** - Hides feeds and extra noise
-3. Visit Facebook or Instagram—enjoy the cleaner experience!
+2. **Enable "Redirect to Messenger"** - This is the primary feature that takes you straight to messages
+3. Optionally toggle **"Remove Navigation"** to hide nav buttons and sidebars from the pages
+4. Visit Facebook or Instagram—you'll be taken directly to Messenger or see a messages-only interface!
+
+**Pro Tip:** Enable both toggles for the ultimate distraction-free experience
 
 ![Extension Popup](./images/popup-screenshot.png)
 *Screenshot of the extension popup showing toggle options*
