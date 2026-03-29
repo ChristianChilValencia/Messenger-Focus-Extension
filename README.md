@@ -2,8 +2,8 @@
 
 A Chrome extension that strips away the distractions and transforms Facebook and Instagram into clean, messaging-only experiences.
 
-![Banner Image](./images/banner.png)
-*Add a banner or hero image here showing the extension in action*
+<img width="465" height="299" alt="image" src="https://github.com/user-attachments/assets/a9774e55-6519-48e8-9323-6d639d489354" />
+
 
 ## 💭 The Story Behind This Project
 
