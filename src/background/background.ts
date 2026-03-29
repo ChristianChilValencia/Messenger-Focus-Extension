@@ -3,16 +3,25 @@
 
 const FOCUS_KEY = 'messenger_focus_enabled';
 const BANNER_KEY = 'messenger_banner_enabled';
-const REDIRECT_TARGET = 'https://www.facebook.com/messages';
+const INSTAGRAM_FOCUS_KEY = 'instagram_focus_enabled';
+const INSTAGRAM_SIDEBAR_KEY = 'instagram_sidebar_enabled';
+const FACEBOOK_REDIRECT_TARGET = 'https://www.facebook.com/messages';
+const INSTAGRAM_REDIRECT_TARGET = 'https://www.instagram.com/direct/';
 
 // Initialize default state on install
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.local.get([FOCUS_KEY, BANNER_KEY], (result) => {
+  chrome.storage.local.get([FOCUS_KEY, BANNER_KEY, INSTAGRAM_FOCUS_KEY, INSTAGRAM_SIDEBAR_KEY], (result) => {
     if (typeof result[FOCUS_KEY] !== 'boolean') {
       chrome.storage.local.set({ [FOCUS_KEY]: true });
     }
     if (typeof result[BANNER_KEY] !== 'boolean') {
       chrome.storage.local.set({ [BANNER_KEY]: true });
+    }
+    if (typeof result[INSTAGRAM_FOCUS_KEY] !== 'boolean') {
+      chrome.storage.local.set({ [INSTAGRAM_FOCUS_KEY]: true });
+    }
+    if (typeof result[INSTAGRAM_SIDEBAR_KEY] !== 'boolean') {
+      chrome.storage.local.set({ [INSTAGRAM_SIDEBAR_KEY]: true });
     }
   });
 });
@@ -46,22 +55,49 @@ function broadcast(type: string, enabled: boolean) {
 }
 
 // Redirect logic
-function shouldRedirect(url: string): boolean {
+function shouldRedirectFacebook(url: URL): boolean {
+  const isFacebook = url.hostname.endsWith('facebook.com') || url.hostname.endsWith('fb.com');
+  const isMessenger = url.pathname.startsWith('/messages') || url.pathname.startsWith('/messenger_media');
+  const isGroupCall = url.pathname.startsWith('/groupcall');
+  return isFacebook && !isMessenger && !isGroupCall;
+}
+
+function shouldRedirectInstagram(url: URL): boolean {
+  const isInstagram = url.hostname === 'instagram.com' || url.hostname === 'www.instagram.com';
+  const path = url.pathname.toLowerCase();
+  const isDirect = path.startsWith('/direct');
+  const isCall = path === '/call' || path.startsWith('/call/');
+  const isPost = path.startsWith('/p/');
+  return isInstagram && !isDirect && !isCall && !isPost;
+}
+
+function parseUrl(url: string): URL | null {
   try {
-    const parsed = new URL(url);
-    const isFacebook = parsed.hostname.endsWith('facebook.com') || parsed.hostname.endsWith('fb.com');
-    const isMessenger = parsed.pathname.startsWith('/messages') || parsed.pathname.startsWith('/messenger_media');
-    const isGroupCall = parsed.pathname.startsWith('/groupcall');
-    return isFacebook && !isMessenger && !isGroupCall;
+    return new URL(url);
   } catch {
-    return false;
+    return null;
   }
 }
 
 async function performRedirect(tabId: number, url: string) {
-  const focusEnabled = await getState(FOCUS_KEY, true);
-  if (focusEnabled && shouldRedirect(url)) {
-    chrome.tabs.update(tabId, { url: REDIRECT_TARGET }).catch(() => {});
+  const parsed = parseUrl(url);
+  if (!parsed) {
+    return;
+  }
+
+  if (shouldRedirectFacebook(parsed)) {
+    const focusEnabled = await getState(FOCUS_KEY, true);
+    if (focusEnabled) {
+      chrome.tabs.update(tabId, { url: FACEBOOK_REDIRECT_TARGET }).catch(() => {});
+    }
+    return;
+  }
+
+  if (shouldRedirectInstagram(parsed)) {
+    const instagramFocusEnabled = await getState(INSTAGRAM_FOCUS_KEY, true);
+    if (instagramFocusEnabled) {
+      chrome.tabs.update(tabId, { url: INSTAGRAM_REDIRECT_TARGET }).catch(() => {});
+    }
   }
 }
 
@@ -79,14 +115,14 @@ chrome.webNavigation.onBeforeNavigate.addListener((details) => {
   if (details.frameId === 0) {
     performRedirect(details.tabId, details.url).catch(() => {});
   }
-}, { url: [{ hostSuffix: 'facebook.com' }, { hostSuffix: 'fb.com' }] });
+}, { url: [{ hostSuffix: 'facebook.com' }, { hostSuffix: 'fb.com' }, { hostSuffix: 'instagram.com' }] });
 
-// Facebook is an SPA; route changes often happen via History API.
+// Facebook and Instagram are SPAs; route changes often happen via History API.
 chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
   if (details.frameId === 0) {
     performRedirect(details.tabId, details.url).catch(() => {});
   }
-}, { url: [{ hostSuffix: 'facebook.com' }, { hostSuffix: 'fb.com' }] });
+}, { url: [{ hostSuffix: 'facebook.com' }, { hostSuffix: 'fb.com' }, { hostSuffix: 'instagram.com' }] });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.url) {
@@ -145,6 +181,35 @@ chrome.runtime.onMessage.addListener((msg: any, _sender, sendResponse) => {
   if (msg.type === 'SET_BANNER_STATE') {
     setState(BANNER_KEY, msg.enabled).then(() => {
       broadcast('BANNER_STATE_CHANGED', msg.enabled);
+      sendResponse({ enabled: msg.enabled });
+    });
+    return true;
+  }
+
+  if (msg.type === 'GET_INSTAGRAM_FOCUS_STATE') {
+    getState(INSTAGRAM_FOCUS_KEY, true).then((enabled) => sendResponse({ enabled }));
+    return true;
+  }
+
+  if (msg.type === 'SET_INSTAGRAM_FOCUS_STATE') {
+    setState(INSTAGRAM_FOCUS_KEY, msg.enabled).then(() => {
+      broadcast('INSTAGRAM_FOCUS_STATE_CHANGED', msg.enabled);
+      if (msg.enabled) {
+        redirectEligibleTabs();
+      }
+      sendResponse({ enabled: msg.enabled });
+    });
+    return true;
+  }
+
+  if (msg.type === 'GET_INSTAGRAM_SIDEBAR_STATE') {
+    getState(INSTAGRAM_SIDEBAR_KEY, true).then((enabled) => sendResponse({ enabled }));
+    return true;
+  }
+
+  if (msg.type === 'SET_INSTAGRAM_SIDEBAR_STATE') {
+    setState(INSTAGRAM_SIDEBAR_KEY, msg.enabled).then(() => {
+      broadcast('INSTAGRAM_SIDEBAR_STATE_CHANGED', msg.enabled);
       sendResponse({ enabled: msg.enabled });
     });
     return true;

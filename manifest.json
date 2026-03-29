@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Messenger Focus Only Extension",
-  "description": "Transforms Facebook into a Messenger-only experience. Redirects Facebook to Messenger, removes distractions, and provides a popup toggle.",
+  "description": "Transforms Facebook and Instagram into messaging-focused experiences with redirect and distraction-removal toggles.",
   "version": "1.0.0",
   "icons": {
     "16": "icon.png",
@@ -29,13 +29,17 @@
   ],
   "host_permissions": [
     "*://*.facebook.com/*",
-    "*://fb.com/*"
+    "*://fb.com/*",
+    "*://*.instagram.com/*",
+    "*://instagram.com/*"
   ],
   "content_scripts": [
     {
       "matches": [
         "*://*.facebook.com/*",
-        "*://fb.com/*"
+        "*://fb.com/*",
+        "*://*.instagram.com/*",
+        "*://instagram.com/*"
       ],
       "js": ["dist/content/content.js"]
     }
