@@ -25,8 +25,8 @@ That's where this extension comes in. It lets you transform Facebook and Instagr
 
 | Before | After |
 |--------|-------|
-| ![Facebook Before](<img width="1895" height="1017" alt="Screenshot 2026-03-29 202744" src="https://github.com/user-attachments/assets/ce82de22-6651-4a20-94c9-6a0b5b181cf3" />) | ![Facebook After](<img width="1894" height="1016" alt="Screenshot 2026-03-29 202811" src="https://github.com/user-attachments/assets/0fe11c94-4c5e-48e4-95b5-bf5733ce0d08" />) |
-| ![Instagram Before](<img width="1896" height="1011" alt="Screenshot 2026-03-29 202644" src="https://github.com/user-attachments/assets/1b108fea-aded-4011-9a7a-4ef567a9cba2" />) | ![Instagram After](<img width="1895" height="1011" alt="Screenshot 2026-03-29 202636" src="https://github.com/user-attachments/assets/f1c289f0-c292-4c95-942c-9809cef320b5" />) |
+| ![Facebook Before]<img width="1895" height="1017" alt="Screenshot 2026-03-29 202744" src="https://github.com/user-attachments/assets/ce82de22-6651-4a20-94c9-6a0b5b181cf3" /> | ![Facebook After]<img width="1894" height="1016" alt="Screenshot 2026-03-29 202811" src="https://github.com/user-attachments/assets/0fe11c94-4c5e-48e4-95b5-bf5733ce0d08" /> |
+| ![Instagram Before](<img width="1896" height="1011" alt="Screenshot 2026-03-29 202644" src="https://github.com/user-attachments/assets/1b108fea-aded-4011-9a7a-4ef567a9cba2" />) | ![Instagram After]<img width="1895" height="1011" alt="Screenshot 2026-03-29 202636" src="https://github.com/user-attachments/assets/f1c289f0-c292-4c95-942c-9809cef320b5" /> |
 
 ## 🎯 What It Does
 
