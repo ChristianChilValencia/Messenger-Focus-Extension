@@ -178,8 +178,8 @@ To use the image placeholders above, create an `images/` folder in your project 
 
 ## 👨‍💻 Built By
 
-**Christian Valencia**
+Developed by **Christian Valencia** 
 
-Part of **ValAid** — *A ValAid solution might be your valid solution*
+**ValAid**: *A ValAid solution might be your valid solution*
 
 ---
