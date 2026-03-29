@@ -23,13 +23,13 @@ That's where this extension comes in. It lets you transform Facebook and Instagr
 
 ### Visual Comparison
 
-**Facebook - Before & After:**
+**Facebook:**
 
 | Before | After |
 |--------|-------|
 | <img width="600" alt="Facebook Before" src="https://github.com/user-attachments/assets/ce82de22-6651-4a20-94c9-6a0b5b181cf3" /> | <img width="600" alt="Facebook After" src="https://github.com/user-attachments/assets/0fe11c94-4c5e-48e4-95b5-bf5733ce0d08" /> |
 
-**Instagram - Before & After:**
+**Instagram:**
 
 | Before | After |
 |--------|-------|
