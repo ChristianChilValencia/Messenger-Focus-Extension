@@ -120,37 +120,6 @@ ISC
 
 ---
 
-## 🤝 Sharing This Extension
-
-Want to share this with friends? Here are the easiest ways:
-
-### Option 1: **ZIP Package Distribution** (Simplest)
-Generate a single ZIP file to share with anyone:
-```bash
-bash export-crx.sh
-```
-
-This creates `Messenger-Focus-Extension.zip` in your project root. Your friends can:
-1. Extract the ZIP
-2. Follow the "For Non-Developers" installation steps above
-3. Done! No coding experience needed
-
-### Option 2: **GitHub Releases** (Recommended for Version Control)
-1. Go to your GitHub repository
-2. Create a [Release](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-and-tags)
-3. Upload the `Messenger-Focus-Extension.zip` file (from running `bash export-crx.sh`)
-4. Share the release link with friends
-5. They can download and install (see non-developer instructions above)
-
-### Option 3: **Chrome Web Store** (Most Professional)
-For wider distribution, publish to the Chrome Web Store:
-1. Create a [Chrome Developer Account](https://chromewebstore.google.com/publish)
-2. Upload your extension (pay the one-time $5 fee)
-3. Wait for review (usually a few hours to a day)
-4. Share the Web Store link—users can one-click install with no setup needed
-
----
-
 ## 🌐 Browser Support
 
 | Browser | How to Install |
