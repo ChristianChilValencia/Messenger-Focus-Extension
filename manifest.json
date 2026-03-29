@@ -1,19 +1,51 @@
 {
   "manifest_version": 3,
-  "name": "Messenger Focus",
-  "version": "0.1",
-
+  "name": "Messenger Focus Only Extension",
+  "description": "Transforms Facebook into a Messenger-only experience. Redirects Facebook to Messenger, removes distractions, and provides a popup toggle.",
+  "version": "1.0.0",
+  "icons": {
+    "16": "icon.png",
+    "32": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_icon": {
+      "16": "icon.png",
+      "32": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
   "background": {
     "service_worker": "dist/background.js"
   },
-
+  "permissions": [
+    "tabs",
+    "scripting",
+    "storage",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "*://*.facebook.com/*",
+    "*://fb.com/*"
+  ],
   "content_scripts": [
     {
-      "matches": ["*://*.facebook.com/*"],
+      "matches": [
+        "*://*.facebook.com/*",
+        "*://fb.com/*"
+      ],
       "js": ["dist/content.js"],
-      "css": ["src/styles.css"]
+      "css": ["src/style.css"]
     }
   ],
-
-  "permissions": ["tabs", "webNavigation"]
+  "web_accessible_resources": [
+    {
+      "resources": ["src/style.css"],
+      "matches": ["*://*.facebook.com/*", "*://fb.com/*"]
+    }
+  ]
 }
+
