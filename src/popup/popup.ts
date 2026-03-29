@@ -36,15 +36,27 @@ function initialize() {
   instagramFocusToggle = document.getElementById('toggle-instagram-focus') as HTMLInputElement | null;
   instagramSidebarToggle = document.getElementById('toggle-instagram-sidebar') as HTMLInputElement | null;
 
+
+  // Helper to send a message to the active tab for instant effect
+  function sendToActiveTab(msg: any) {
+    chrome.tabs && chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id) {
+        chrome.tabs.sendMessage(tabs[0].id, msg);
+      }
+    });
+  }
+
   if (focusToggle) {
     focusToggle.addEventListener('change', async () => {
       await sendMessage({ type: 'SET_FOCUS_STATE', enabled: focusToggle!.checked });
+      sendToActiveTab({ type: 'FOCUS_STATE_CHANGED', enabled: focusToggle!.checked });
       syncUI();
     });
   }
   if (bannerToggle) {
     bannerToggle.addEventListener('change', async () => {
       await sendMessage({ type: 'SET_BANNER_STATE', enabled: bannerToggle!.checked });
+      sendToActiveTab({ type: 'BANNER_STATE_CHANGED', enabled: bannerToggle!.checked });
       syncUI();
     });
   }
@@ -52,6 +64,7 @@ function initialize() {
   if (instagramFocusToggle) {
     instagramFocusToggle.addEventListener('change', async () => {
       await sendMessage({ type: 'SET_INSTAGRAM_FOCUS_STATE', enabled: instagramFocusToggle!.checked });
+      sendToActiveTab({ type: 'INSTAGRAM_FOCUS_STATE_CHANGED', enabled: instagramFocusToggle!.checked });
       syncUI();
     });
   }
@@ -59,6 +72,7 @@ function initialize() {
   if (instagramSidebarToggle) {
     instagramSidebarToggle.addEventListener('change', async () => {
       await sendMessage({ type: 'SET_INSTAGRAM_SIDEBAR_STATE', enabled: instagramSidebarToggle!.checked });
+      sendToActiveTab({ type: 'INSTAGRAM_SIDEBAR_STATE_CHANGED', enabled: instagramSidebarToggle!.checked });
       syncUI();
     });
   }
