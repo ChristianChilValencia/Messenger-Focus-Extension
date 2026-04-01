@@ -1,101 +1,133 @@
 // src/popup/popup.ts
 // Handles popup UI logic for Messenger Focus
 
-let focusToggle: HTMLInputElement | null;
-let bannerToggle: HTMLInputElement | null;
-let instagramFocusToggle: HTMLInputElement | null;
-let instagramSidebarToggle: HTMLInputElement | null;
+interface ToggleConfig {
+  id: string;
+  getType: string;
+  setType: string;
+  changeType: string;
+}
+
+const TOGGLES: ToggleConfig[] = [
+  { id: 'toggle-focus', getType: 'GET_FOCUS_STATE', setType: 'SET_FOCUS_STATE', changeType: 'FOCUS_STATE_CHANGED' },
+  { id: 'toggle-banner', getType: 'GET_BANNER_STATE', setType: 'SET_BANNER_STATE', changeType: 'BANNER_STATE_CHANGED' },
+  { id: 'toggle-instagram-focus', getType: 'GET_INSTAGRAM_FOCUS_STATE', setType: 'SET_INSTAGRAM_FOCUS_STATE', changeType: 'INSTAGRAM_FOCUS_STATE_CHANGED' },
+  { id: 'toggle-instagram-sidebar', getType: 'GET_INSTAGRAM_SIDEBAR_STATE', setType: 'SET_INSTAGRAM_SIDEBAR_STATE', changeType: 'INSTAGRAM_SIDEBAR_STATE_CHANGED' },
+];
+
+const toggleElements = new Map<string, HTMLInputElement>();
+let toggleAllCheckbox: HTMLInputElement | null = null;
+let isUpdatingAll = false;
 
 function sendMessage<T = any>(msg: any): Promise<T> {
   return new Promise((resolve) => {
-    chrome.runtime.sendMessage(msg, (resp) => resolve(resp));
+    try {
+      chrome.runtime.sendMessage(msg, (resp) => {
+        if (chrome.runtime.lastError) {
+          console.warn('Message error:', chrome.runtime.lastError.message);
+          resolve({} as T);
+        } else {
+          resolve(resp);
+        }
+      });
+    } catch (error) {
+      console.warn('Send message error:', error);
+      resolve({} as T);
+    }
   });
 }
 
+function sendToActiveTab(msg: any) {
+  try {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id) {
+        chrome.tabs.sendMessage(tabs[0].id, msg).catch(() => {});
+      }
+    });
+  } catch (error) {
+    console.warn('Send to active tab error:', error);
+  }
+}
+
+async function updateAllCheckbox() {
+  const allToggled = TOGGLES.every((config) => {
+    const elem = toggleElements.get(config.id);
+    return elem?.checked === true;
+  });
+  
+  const noneToggled = TOGGLES.every((config) => {
+    const elem = toggleElements.get(config.id);
+    return elem?.checked === false;
+  });
+
+  if (toggleAllCheckbox) {
+    toggleAllCheckbox.checked = allToggled;
+    toggleAllCheckbox.indeterminate = !allToggled && !noneToggled;
+  }
+}
+
 async function syncUI() {
-  const focusResp = await sendMessage<{ enabled: boolean }>({ type: 'GET_FOCUS_STATE' });
-  const bannerResp = await sendMessage<{ enabled: boolean }>({ type: 'GET_BANNER_STATE' });
-  const instagramFocusResp = await sendMessage<{ enabled: boolean }>({ type: 'GET_INSTAGRAM_FOCUS_STATE' });
-  const instagramSidebarResp = await sendMessage<{ enabled: boolean }>({ type: 'GET_INSTAGRAM_SIDEBAR_STATE' });
-
-  const focusEnabled = typeof focusResp?.enabled === 'boolean' ? focusResp.enabled : true;
-  const bannerEnabled = typeof bannerResp?.enabled === 'boolean' ? bannerResp.enabled : true;
-  const instagramFocusEnabled = typeof instagramFocusResp?.enabled === 'boolean' ? instagramFocusResp.enabled : true;
-  const instagramSidebarEnabled = typeof instagramSidebarResp?.enabled === 'boolean' ? instagramSidebarResp.enabled : true;
-
-  if (focusToggle) focusToggle.checked = focusEnabled;
-  if (bannerToggle) bannerToggle.checked = bannerEnabled;
-  if (instagramFocusToggle) instagramFocusToggle.checked = instagramFocusEnabled;
-  if (instagramSidebarToggle) instagramSidebarToggle.checked = instagramSidebarEnabled;
+  for (const config of TOGGLES) {
+    try {
+      const resp = await sendMessage<{ enabled: boolean }>({ type: config.getType });
+      const elem = toggleElements.get(config.id);
+      if (elem) {
+        elem.checked = typeof resp?.enabled === 'boolean' ? resp.enabled : true;
+      }
+    } catch (error) {
+      console.warn(`Error syncing ${config.id}:`, error);
+    }
+  }
+  
+  await updateAllCheckbox();
 }
 
 function initialize() {
-  // Query DOM elements after DOM is ready
-  focusToggle = document.getElementById('toggle-focus') as HTMLInputElement | null;
-  bannerToggle = document.getElementById('toggle-banner') as HTMLInputElement | null;
-  instagramFocusToggle = document.getElementById('toggle-instagram-focus') as HTMLInputElement | null;
-  instagramSidebarToggle = document.getElementById('toggle-instagram-sidebar') as HTMLInputElement | null;
+  // Setup "All Features" toggle
+  toggleAllCheckbox = document.getElementById('toggle-all') as HTMLInputElement | null;
+  if (toggleAllCheckbox) {
+    toggleAllCheckbox.addEventListener('change', async () => {
+      isUpdatingAll = true;
+      const shouldEnable = toggleAllCheckbox!.checked;
 
-
-  // Helper to send a message to the active tab for instant effect
-  function sendToActiveTab(msg: any) {
-    chrome.tabs && chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]?.id) {
-        chrome.tabs.sendMessage(tabs[0].id, msg);
+      for (const config of TOGGLES) {
+        const elem = toggleElements.get(config.id);
+        if (elem) {
+          elem.checked = shouldEnable;
+          await sendMessage({ type: config.setType, enabled: shouldEnable });
+          sendToActiveTab({ type: config.changeType, enabled: shouldEnable });
+        }
       }
+
+      isUpdatingAll = false;
+      await updateAllCheckbox();
     });
   }
 
-  if (focusToggle) {
-    focusToggle.addEventListener('change', async () => {
-      await sendMessage({ type: 'SET_FOCUS_STATE', enabled: focusToggle!.checked });
-      sendToActiveTab({ type: 'FOCUS_STATE_CHANGED', enabled: focusToggle!.checked });
-      syncUI();
-    });
-  }
-  if (bannerToggle) {
-    bannerToggle.addEventListener('change', async () => {
-      await sendMessage({ type: 'SET_BANNER_STATE', enabled: bannerToggle!.checked });
-      sendToActiveTab({ type: 'BANNER_STATE_CHANGED', enabled: bannerToggle!.checked });
-      syncUI();
-    });
-  }
+  // Query DOM elements
+  TOGGLES.forEach((config) => {
+    const elem = document.getElementById(config.id) as HTMLInputElement | null;
+    if (elem) {
+      toggleElements.set(config.id, elem);
+      elem.addEventListener('change', async () => {
+        if (!isUpdatingAll) {
+          await sendMessage({ type: config.setType, enabled: elem.checked });
+          sendToActiveTab({ type: config.changeType, enabled: elem.checked });
+          await updateAllCheckbox();
+        }
+      });
+    }
+  });
 
-  if (instagramFocusToggle) {
-    instagramFocusToggle.addEventListener('change', async () => {
-      await sendMessage({ type: 'SET_INSTAGRAM_FOCUS_STATE', enabled: instagramFocusToggle!.checked });
-      sendToActiveTab({ type: 'INSTAGRAM_FOCUS_STATE_CHANGED', enabled: instagramFocusToggle!.checked });
-      syncUI();
-    });
-  }
-
-  if (instagramSidebarToggle) {
-    instagramSidebarToggle.addEventListener('change', async () => {
-      await sendMessage({ type: 'SET_INSTAGRAM_SIDEBAR_STATE', enabled: instagramSidebarToggle!.checked });
-      sendToActiveTab({ type: 'INSTAGRAM_SIDEBAR_STATE_CHANGED', enabled: instagramSidebarToggle!.checked });
-      syncUI();
-    });
-  }
-
+  // Listen for state changes from other sources
   chrome.runtime.onMessage.addListener((msg: { type?: string; enabled?: boolean }) => {
-    if (!focusToggle || !bannerToggle || !instagramFocusToggle || !instagramSidebarToggle) {
-      return;
-    }
-
-    if (msg.type === 'FOCUS_STATE_CHANGED' && typeof msg.enabled === 'boolean') {
-      focusToggle.checked = msg.enabled;
-    }
-
-    if (msg.type === 'BANNER_STATE_CHANGED' && typeof msg.enabled === 'boolean') {
-      bannerToggle.checked = msg.enabled;
-    }
-
-    if (msg.type === 'INSTAGRAM_FOCUS_STATE_CHANGED' && typeof msg.enabled === 'boolean') {
-      instagramFocusToggle.checked = msg.enabled;
-    }
-
-    if (msg.type === 'INSTAGRAM_SIDEBAR_STATE_CHANGED' && typeof msg.enabled === 'boolean') {
-      instagramSidebarToggle.checked = msg.enabled;
+    const config = TOGGLES.find((c) => c.changeType === msg.type);
+    if (config && typeof msg.enabled === 'boolean') {
+      const elem = toggleElements.get(config.id);
+      if (elem) {
+        elem.checked = msg.enabled;
+        updateAllCheckbox();
+      }
     }
   });
 

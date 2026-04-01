@@ -19,7 +19,7 @@
     }
   },
   "background": {
-    "service_worker": "dist/background/background.js"
+    "service_worker": "dist/redirect/redirect.js"
   },
   "permissions": [
     "tabs",
@@ -41,7 +41,7 @@
         "*://*.instagram.com/*",
         "*://instagram.com/*"
       ],
-      "js": ["dist/content/content.js"]
+      "js": ["dist/removal/removal.js"]
     }
   ],
   "web_accessible_resources": [

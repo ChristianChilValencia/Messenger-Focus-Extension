@@ -58,32 +58,38 @@ Both Facebook and Instagram have navigation elements that tempt you to explore f
 
 ## 📦 Installation
 
-### For Developers (Building from Source)
-1. Clone or download this repository
-2. Build the extension:
-   ```bash
-   bash build.sh
-   ```
-3. Open Chrome and go to `chrome://extensions/`
-4. Enable **Developer Mode** (toggle in the top right)
-5. Click **Load unpacked** and select the `dist/` folder from this project
-6. The extension icon should appear in your toolbar
+### Easy Setup for Everyone
 
-### For Non-Developers (Using Shared ZIP)
-1. Download `Messenger-Focus-Extension.zip`
-2. Extract the ZIP file
-3. Open Chrome and go to `chrome://extensions/`
-4. Enable **Developer Mode** (toggle in the top right)
-5. Click **Load unpacked**
-6. Select the extracted `dist/` folder
-7. Done! The extension is now active
+#### Step 1: Build the Extension (One-time)
+```bash
+bash build.sh
+```
+Wait for **"Build complete!"** message ✅
 
-## 🚀 Usage
+#### Step 2: Load Into Chrome
+1. Open Chrome and go to: `chrome://extensions/`
+2. Turn on **Developer mode** (toggle in top-right corner)
+3. Click **Load unpacked** (green button)
+4. Select the **Messenger-Focus-Extension** folder
+5. The extension appears in your list ✅
 
+## 🚀 Usage & Testing
+
+### Quick Start
 1. Click the extension icon in your Chrome toolbar
-2. **Enable "Redirect to Messenger"** - This is the primary feature that takes you straight to messages
-3. Optionally toggle **"Remove Navigation"** to hide nav buttons and sidebars from the pages
-4. Visit Facebook or Instagram—you'll be taken directly to Messenger or see a messages-only interface!
+2. You'll see **5 controls**:
+   - **All Features** toggle at the top to turn all features on/off at once
+   - **4 individual toggles** for each feature
+3. Toggle features **ON** (blue) to enable them
+4. Refresh the page to see changes
+
+### Troubleshooting
+| Issue | Fix |
+|-------|-----|
+| Extension won't load | Make sure Developer mode is turned ON (blue toggle) |
+| Features don't work | Check that the feature toggle is ON (blue), refresh page |
+| Extension disappeared | Check `chrome://extensions/` - it may be disabled |
+| Need to rebuild | Run `bash build.sh` again and reload extension |
 
 **Pro Tip:** Enable all toggles for the ultimate distraction-free experience
 
@@ -97,8 +103,8 @@ Built with:
 ### Project Structure
 ```
 src/
-├── background/     # Service worker for background tasks
-├── content/        # Content scripts that modify pages
+├── redirect/       # Service worker for redirect logic
+├── removal/        # Content scripts that remove UI elements
 ├── popup/          # Extension popup UI and logic
 └── style/          # CSS for modifications
 ```
@@ -116,9 +122,7 @@ This is a personal project and not affiliated with Meta/Facebook/Instagram. Use 
 
 ## 📝 License
 
-ISC
-
----
+This project is open source and available under the MIT License.
 
 ## 🌐 Browser Support
 
@@ -129,19 +133,6 @@ ISC
 | **Edge** | Extract ZIP → `edge://extensions/` → **Load unpacked** |
 | **Opera** | Extract ZIP → `opera://extensions/` → **Load unpacked** |
 | **Firefox** | Extract ZIP → `about:debugging` → **Load Temporary Add-on** |
-
-### Full Installation Guide
-See "For Non-Developers (Using Shared ZIP)" under [Installation](#-installation) section above.
-
----
-
-## 📸 Images Directory
-
-To use the image placeholders above, create an `images/` folder in your project root and add:
-- `banner.png` - Hero/banner image
-- `facebook-before.png` - Facebook before using the extension
-- `facebook-after.png` - Facebook after using the extension
-- `popup-screenshot.png` - Screenshot of the extension popup
 
 ---
 
